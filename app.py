@@ -10,9 +10,80 @@ from matplotlib import pyplot as plt
 import tempfile
 import gdown
 
+import streamlit as st
 
-# Streamlit App Interface
-st.title("Historical Image Restoration & Monument Prediction")
+# Custom CSS for styling
+st.markdown(
+    """
+    <style>
+        .main-title {
+            font-size: 35px;
+            font-weight: bold;
+            color: #2E86C1;
+            text-align: center;
+        }
+        .sub-title {
+            font-size: 20px;
+            color: #566573;
+            text-align: center;
+        }
+        .footer {
+            font-size: 14px;
+            text-align: center;
+            color: #ABB2B9;
+            margin-top: 50px;
+        }
+        .button {
+            text-align: left;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+# Main Title and Subtitle
+st.markdown('<div class="main-title">Historical Image Restoration & Monument Prediction 🏛️</div>', unsafe_allow_html=True)
+st.markdown('<div class="sub-title">Upload a historical image to enhance, restore, or identify monuments</div>', unsafe_allow_html=True)
+
+# Sidebar Content
+with st.sidebar:
+    st.button("Developers", key="menu", help="Click to see options")
+    st.markdown("**Names:**\n1. Maitreyee Deshmukh\n2. Pratham Patharkar\n3. Riya Baviskar\n4. Sumukh Dahale", unsafe_allow_html=True)
+    
+    st.markdown("---")
+    st.markdown("### About the Project")
+    
+    about_project = """
+    ### Why Restore Historical Images?
+    Preserving history through technology allows us to:
+    
+    - **Enhance and repair damaged photos**, bringing them back to life.
+    - **Promote cultural heritage** by identifying and classifying historical monuments.
+    - **Use AI for meaningful purposes** in education and research.
+    
+    Our goal is to provide advanced tools for image restoration and monument identification using computer vision and machine learning.
+    """
+    st.markdown(about_project, unsafe_allow_html=True)
+    
+    st.markdown("---")
+    st.markdown("### Features")
+    st.markdown(
+        """
+        - **Sharpness Enhancement:** Restore blurred or out-of-focus images.
+        - **Dehazing:** Remove haze for a clearer view.
+        - **Contrast Enhancement:** Highlight important details.
+        - **Noise Reduction:** Eliminate unwanted artifacts.
+        - **Inpainting:** Repair damaged regions intelligently.
+        - **Monument Prediction:** Identify historical monuments in images.
+        """,
+        unsafe_allow_html=True,
+    )
+    
+    st.markdown("---")
+    st.markdown('<div class="footer">Powered by Computer Vision & Machine Learning 📷</div>', unsafe_allow_html=True)
+
 
 # Paths for Historical Monument Model and Class Indices (these are stored in the same directory as app.py)
 MONUMENT_MODEL_PATH = 'indian_monuments_model.h5'
