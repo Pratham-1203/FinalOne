@@ -60,7 +60,7 @@ def colorize_image(image):
 # Function to reduce noise in an image
 def reduce_noise(image, method="gaussian"):
     if method == "gaussian":
-        return cv2.GaussianBlur(image, ( 5, 5), 0)
+        return cv2.GaussianBlur(image, (5, 5), 0)
     elif method == "median":
         return cv2.medianBlur(image, 5)
     else:
@@ -108,6 +108,29 @@ def predict_image(image, model, class_indices):
     st.image(image, caption=f"Predicted: {predicted_class_label} ({confidence * 100:.2f}%)")
     return predicted_class_label, confidence
 
+# Function to enhance sharpness
+def enhance_sharpness(image):
+    kernel = np.array([[0, -1, 0],
+                       [-1, 5, -1],
+                       [0, -1, 0]])
+    sharpened = cv2.filter2D(image, -1, kernel)
+    return sharpened
+
+# Function to remove haze from an image
+def dehaze_image(image):
+    lab = cv2.cvtColor(image, cv2.COLOR_BGR2LAB)
+    l, a, b = cv2.split(lab)
+    l = cv2.equalizeHist(l)
+    enhanced_lab = cv2.merge((l, a, b))
+    dehazed_image = cv2.cvtColor(enhanced_lab, cv2.COLOR_LAB2BGR)
+    return dehazed_image
+
+# Function to enhance contrast
+def enhance_contrast(image):
+    alpha = 1.5  # Contrast control
+    beta = 20    # Brightness control
+    contrast_enhanced = cv2.convertScaleAbs(image, alpha=alpha, beta=beta)
+    return contrast_enhanced
 
 # Streamlit File Upload and Operations
 uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
@@ -124,7 +147,7 @@ if uploaded_file:
         st.image(image, caption="Uploaded Image", channels="BGR")
 
         # Operation selection
-        operation = st.radio("Choose an operation:", ["Colorize Image", "Reduce Noise", "Inpaint Image", "Predict Monument"])
+        operation = st.radio("Choose an operation:", ["Colorize Image", "Reduce Noise", "Inpaint Image", "Predict Monument", "Enhance Sharpness", "Dehaze Image", "Enhance Contrast"])
 
         if operation == "Colorize Image":
             colorized_image = colorize_image(image)
@@ -150,3 +173,15 @@ if uploaded_file:
                 class_indices = json.load(f)
             label, confidence = predict_image(image, monument_model, class_indices)
             st.write(f"Predicted Monument: {label}, Confidence: {confidence * 100:.2f}%")
+
+        elif operation == "Enhance Sharpness":
+            sharpened_image = enhance_sharpness(image)
+            st.image(sharpened_image, caption="Sharpened Image", channels="BGR")
+
+        elif operation == "Dehaze Image":
+            dehazed_image = dehaze_image(image)
+            st.image(dehazed_image, caption="Dehazed Image", channels="BGR")
+
+        elif operation == "Enhance Contrast":
+            contrast_enhanced_image = enhance_contrast(image)
+            st.image(contrast_enhanced_image, caption="Contrast Enhanced Image", channels="BGR")
